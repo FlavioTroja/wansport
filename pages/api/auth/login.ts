@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         let { db } = await connect();
-        const user = await db.collection('users').findOne({
+        const user: Promise<UserModel> | any = await db.collection('users').findOne({
             $or: [
                 { username: payload.username },
                 { email: payload.username }
@@ -44,9 +44,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         return res.status(200).json({token})
     } catch (err) {
-        /*if (err instanceof Unauthorized) {
-            return res.status(err.statusCode).send(err.message)
-        }*/
         return res.status(500).send({ message: "Errore di autenticazione" })
     }
 }

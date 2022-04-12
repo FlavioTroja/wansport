@@ -1,13 +1,36 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from '../../styles/Auth.module.css';
 
 const Login: NextPage = () => {
 
     const [values, setValues] = useState({});
     const router = useRouter();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+
+          const response = await fetch(`/api/auth/me`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": localStorage.getItem('token') as string
+            },
+          });
+          
+          const user = await response.json();
+
+          if (!!user._id) {
+            router.push("/dashboard");
+          } 
+
+        }
+    
+        fetchUser();
+      });    
+
 
     function submit(e: { preventDefault: () => void; }) {
         e.preventDefault();

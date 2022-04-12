@@ -1,9 +1,14 @@
+import moment from "moment";
+
 const Footer = () => {
+
+    const year = moment().format('YYYY');
+
     return(
         <>    
             <footer>
                 <p>
-                    &copy; Overzoom 2022
+                    &copy; Overzoom {year}
                 </p>
             </footer>
             <style jsx>{`

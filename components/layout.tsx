@@ -3,7 +3,11 @@ import Footer from './footer';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 
-const Layout = ({children}) => {
+export interface LayoutProps  { 
+  children: React.ReactNode
+}
+
+const Layout = (props: LayoutProps) => {
 
     const [user, setUser] = useState();
 
@@ -33,7 +37,7 @@ const Layout = ({children}) => {
                 <meta name="description" content="Questa è la pagina del mio blog."/>
             </Head>
             { !!user ? <Nav/> : '' }
-                { children }
+                { props.children }
             <Footer/>
         </>
     );

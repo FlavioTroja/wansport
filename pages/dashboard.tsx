@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 const Dashboard: NextPage = () => {
 
     const router = useRouter();
+    const [user, setUser] = useState();
+
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -22,17 +24,19 @@ const Dashboard: NextPage = () => {
             router.push("/auth/login");
           } 
     
+          const res = await response.json();
+          setUser(res.username);
         }
     
         fetchUser();
-      }, []);    
+      });    
 
 
     return (
         <div className={styles.container}>
             <main className={styles.main}>
                 <h1 className={styles.title}>
-                    Welcome user
+                    Welcome {user}
                 </h1>
 
 

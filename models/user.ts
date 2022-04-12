@@ -1,6 +1,9 @@
 export interface UserModel {
-    _id: string
+    _id?: any
+    name?: string
+    surname?: string
     username: string
+    birthDate?: Date
     email: string
     password: string
     roles?: Array<UserRoles>
