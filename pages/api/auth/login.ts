@@ -1,13 +1,18 @@
+import { UserModel } from './../../../models/user';
 import { NextApiRequest, NextApiResponse } from "next";
 import { connect } from '../../../utils/dbConnect';
 import { comparePasswords } from '../../../utils/crypto';
+import jwt from "jwt-simple";
+import moment from "moment";
+
 
 export interface LoginPayload {
     username: string
     password: string
 }
 
-export async function login(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    
     const payload: LoginPayload = req.body;
 
     if (!payload.username && !payload.password) {
@@ -31,14 +36,11 @@ export async function login(req: NextApiRequest, res: NextApiResponse) {
             ]
         });
 
-        console.log(user);
-
-
-        if (!await comparePasswords(payload.password, user.password)) {
+        if (!await comparePasswords(user.password, payload.password)) {
             return res.status(400).send({ message: "La password è errata!" });
         }
 
-        let token /*= await createToken(user).then(jwt => jwt)*/;
+        let token = await createToken(user).then(jwt => jwt);
 
         return res.status(200).json({token})
     } catch (err) {
@@ -49,6 +51,17 @@ export async function login(req: NextApiRequest, res: NextApiResponse) {
     }
 }
 
-export async function register(req: NextApiRequest, res: NextApiResponse) {
+export async function createToken(user: UserModel) {
 
+    const expires = moment().utc().add({ weeks: 1 }).unix();
+    const token = {
+        exp: expires,
+        userId: user._id,
+    };
+
+    const encoded = jwt.encode(token, process.env.SECRET_KEY as string);
+
+    return new Promise(function(resolve, reject){
+        resolve(`JWT ${encoded}`);
+    });
 }

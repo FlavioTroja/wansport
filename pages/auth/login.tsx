@@ -1,25 +1,27 @@
 import { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import styles from '../../styles/Auth.module.css';
 
 const Login: NextPage = () => {
 
     const [values, setValues] = useState({});
-    //const navigate = useNavigate();  
+    const router = useRouter();
 
-    function submit(e: any) {
+    function submit(e: { preventDefault: () => void; }) {
         e.preventDefault();
     
-        fetch("/api/auth", {
-            method: "GET",
+        fetch("/api/auth/login", {
+            method: "post",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values)
         })
         .then(res => res.json())
         .then((result) => {
             localStorage.setItem("token", result.token);
-            //navigate("/home");
+            router.push("/dashboard");
+            router.reload()
           }, (error) => {
             console.error("ERRORE!", error);
           }
@@ -42,10 +44,21 @@ const Login: NextPage = () => {
 
                 <form className={styles.card} onSubmit={submit}>
                     <label>Username/Email</label>
-                    <input className={styles.input} name="username" type="text" onChange={(e) => handleChange(e)}/>
+                    <input 
+                        className={styles.input} 
+                        name="username" 
+                        type="text" 
+                        onChange={(e) => handleChange(e)}
+                    />
 
                     <label>Password</label>
-                    <input className={styles.input} name="password" type="password" onChange={(e) => handleChange(e)}/>
+                    <input 
+                        className={styles.input} 
+                        name="password" 
+                        type="password" 
+                        onChange={(e) => 
+                        handleChange(e)}
+                    />
 
                     <button className={styles.button} type="submit">Login</button>
 
