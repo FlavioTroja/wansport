@@ -1,4 +1,5 @@
 import moment from "moment";
+import styles from '../styles/Home.module.css'
 
 const Footer = () => {
 
@@ -6,16 +7,15 @@ const Footer = () => {
 
     return(
         <>    
-            <footer>
-                <p>
-                    &copy; Overzoom {year}
-                </p>
+            <footer className={styles.footer}>
+                <a
+                    href="https://overzoom.it/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Powered by &copy; Overzoom {year}
+                </a>
             </footer>
-            <style jsx>{`
-                p {
-                    text-align: center
-                }
-            `}</style>
         </>
     );
 }

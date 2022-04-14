@@ -7,30 +7,25 @@ import styles from '../../styles/Auth.module.css';
 const Login: NextPage = () => {
 
     const [values, setValues] = useState({});
+    let [error, setError] = useState(null);
     const router = useRouter();
 
-    useEffect(() => {
-        const fetchUser = async () => {
-
-          const response = await fetch(`/api/auth/me`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": localStorage.getItem('token') as string
-            },
-          });
-          
-          const user = await response.json();
-
-          if (!!user._id) {
-            router.push("/dashboard");
-          } 
-
-        }
+    /*Login.getInitialProps = async () => {
+        const response = await fetch(`/api/auth/me`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem('token') as string
+          },
+        });
+        
+        const user = await response.json();
+      
+        if (!!user._id) {
+          router.push("/dashboard");
+        } 
+    };    */
     
-        fetchUser();
-      });    
-
 
     function submit(e: { preventDefault: () => void; }) {
         e.preventDefault();
@@ -42,9 +37,17 @@ const Login: NextPage = () => {
         })
         .then(res => res.json())
         .then((result) => {
-            localStorage.setItem("token", result.token);
-            router.push("/dashboard");
-            router.reload()
+
+            if (!!result.token) {
+                localStorage.setItem("token", result.token);
+                router.push("/dashboard");
+                //router.reload();
+              return;
+            } else {
+                setError(result.message);
+              return;
+            }
+
           }, (error) => {
             console.error("ERRORE!", error);
           }
@@ -58,7 +61,12 @@ const Login: NextPage = () => {
         setValues({ ...values, [name]: value });
     }
 
+    function handleClick() {
+      setError(null);
+    }
+
     return (
+      <>
         <div className={styles.container}>
             <main className={styles.main}>
                 <h1 className={styles.title}>
@@ -83,6 +91,14 @@ const Login: NextPage = () => {
                         handleChange(e)}
                     />
 
+                    { !!error ?
+                        <div className="alert">
+                            <span className="closebtn" onClick={handleClick}>&times;</span> 
+                            <strong>Attenzione!</strong> {error}
+                        </div>
+                      : `` } 
+ 
+
                     <button className={styles.button} type="submit">Login</button>
 
                     <Link href="/auth/register">
@@ -91,6 +107,7 @@ const Login: NextPage = () => {
                 </form>
             </main>
         </div>
+      </>
     );
 } 
 

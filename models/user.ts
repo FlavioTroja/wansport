@@ -6,6 +6,7 @@ export interface UserModel {
     birthDate?: Date
     email: string
     password: string
+    confirm_password?: string
     roles?: Array<UserRoles>
     isAdmin?: () => boolean
 }

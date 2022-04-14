@@ -4,6 +4,9 @@ import { connect } from '../../../utils/dbConnect';
 import { comparePasswords } from '../../../utils/crypto';
 import jwt from "jwt-simple";
 import moment from "moment";
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 
 export interface LoginPayload {
@@ -28,19 +31,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        let { db } = await connect();
-        const user: Promise<UserModel> | any = await db.collection('users').findOne({
+        const { db } = await connect();
+        const user = await db.collection('users').findOne({
             $or: [
                 { username: payload.username },
                 { email: payload.username }
             ]
-        });
+        }) as UserModel;
 
         if (!await comparePasswords(user.password, payload.password)) {
-            return res.status(400).send({ message: "La password è errata!" });
+            return res.status(400).send({ message: "La password è errata" });
         }
 
-        let token = await createToken(user).then(jwt => jwt);
+        const token = await createToken(user).then(jwt => jwt);
 
         return res.status(200).json({token})
     } catch (err) {

@@ -12,13 +12,16 @@ const Layout = (props: LayoutProps) => {
     const [user, setUser] = useState();
 
     useEffect(() => {
+
+      const token = localStorage.getItem('token') as string;
+
         const fetchUser = async () => {
 
           const response = await fetch(`/api/auth/me`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": localStorage.getItem('token') as string
+              "Authorization": token
             },
           });
           
@@ -27,7 +30,9 @@ const Layout = (props: LayoutProps) => {
 
         }
     
-        fetchUser();
+        if (!!token) {
+          fetchUser();
+        }
       }, []);    
 
     return (
