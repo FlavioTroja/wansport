@@ -62,8 +62,7 @@ const Register: NextPage = () => {
         .then(res => res.json())
         .then((result) => {
 
-            if (!!result.message) {
-                console.error("ERRORE!", result);
+            if (result.status !== 200) {
                 setError(result.message);
                 return;
             }
