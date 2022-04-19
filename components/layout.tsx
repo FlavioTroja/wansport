@@ -2,6 +2,7 @@ import Nav from './nav';
 import Footer from './footer';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import { userService } from '../utils/services/user.service';
 
 export interface LayoutProps  { 
   children: React.ReactNode
@@ -12,26 +13,19 @@ const Layout = (props: LayoutProps) => {
     const [user, setUser] = useState();
     
     useEffect(() => {
-        const token = localStorage.getItem('token') as string;
 
         const fetchUser = async () => {
 
-          const response = await fetch(`/api/auth/me`, {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": token
-            },
-          });
-          
-
+          const response = await userService.me();
           const data = await response.json();
+
           setUser(!data?.message ? data.name : null);
         }
     
-        if (!!token) {
+        if (!!userService.userValue) {
           fetchUser();
         }
-    }, [user]);
+    }, [userService.userValue]);
 
 
     return (
@@ -40,7 +34,9 @@ const Layout = (props: LayoutProps) => {
                 <title>My Blog | Page</title>
                 <meta name="description" content="Questa è la pagina del mio blog."/>
             </Head>
-            { !!user ? <Nav user={user}/> : `` }
+              {!! userService.userValue ? 
+                <Nav user={user}/>
+              : ''}
                 { props.children }
             <Footer/>
         </>

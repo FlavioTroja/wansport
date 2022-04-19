@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "../styles/Nav.module.css";
+import { userService } from "../utils/services/user.service";
 
 const Nav = ({user}: any) => {
 
@@ -33,12 +34,7 @@ const Nav = ({user}: any) => {
                                     <a href="#">Link 1</a>
                                     <a href="#">Link 2</a>
                                     <Link href="">
-                                        <a onClick={
-                                            () => {
-                                                localStorage.clear()
-                                                router.push('/auth/login')
-                                            }
-                                        }>Esci</a>
+                                        <a onClick={userService.logout}>Esci</a>
                                     </Link>
                                 </div>
                             </div> 

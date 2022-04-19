@@ -2,6 +2,7 @@ import { NextPage } from "next/types";
 import styles from '../styles/Home.module.css';
 import { useEffect, useState } from 'react';
 import { useRouter } from "next/router";
+import { userService } from "../utils/services/user.service";
 
 const Dashboard: NextPage = () => {
 
@@ -10,15 +11,9 @@ const Dashboard: NextPage = () => {
 
 
     useEffect(() => {
-        /*const fetchUser = async () => {
+        const fetchUser = async () => {
 
-          const response = await fetch(`/api/auth/me`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": localStorage.getItem('token') as string
-            },
-          });
+          const response = await userService.me();
     
           if (!response.ok) {
             router.push("/auth/login");
@@ -28,7 +23,7 @@ const Dashboard: NextPage = () => {
           setUser(res.username);
         }
     
-        fetchUser();*/
+        fetchUser();
       });    
 
 

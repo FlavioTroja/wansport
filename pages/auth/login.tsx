@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import styles from '../../styles/Auth.module.css';
+import { userService } from "../../utils/services/user.service";
 
 const Login: NextPage = () => {
 
@@ -13,29 +14,17 @@ const Login: NextPage = () => {
     function submit(e: { preventDefault: () => void; }) {
         e.preventDefault();
     
-        fetch("/api/auth/login", {
-            method: "post",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(values)
-        })
-        .then(res => res.json())
-        .then((result) => {
-
-            if (!!result.token) {
-                localStorage.setItem("token", result.token);
-                router.push("/dashboard");
-              return;
-            } else {
-                setError(result.message);
-              return;
-            }
-
-          }, (error) => {
-            console.error("ERRORE!", error);
-          }
-        )
+        
+        userService.login(values)
+          .then(() => {
+            const returnUrl = router.query.returnUrl || '/dashboard' as any;
+            router.push(returnUrl);
+          })
+          .catch(error => {
+            console.error(error);        
+          });
     }
-    
+
     function handleChange(event: { target: { value: string; name: string; }; }) {
         const value = event.target.value;
         const name = event.target.name;
