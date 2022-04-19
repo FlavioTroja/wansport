@@ -7,25 +7,8 @@ import styles from '../../styles/Auth.module.css';
 const Login: NextPage = () => {
 
     const [values, setValues] = useState({});
-    let [error, setError] = useState(null);
     const router = useRouter();
-
-    /*Login.getInitialProps = async () => {
-        const response = await fetch(`/api/auth/me`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": localStorage.getItem('token') as string
-          },
-        });
-        
-        const user = await response.json();
-      
-        if (!!user._id) {
-          router.push("/dashboard");
-        } 
-    };    */
-    
+    let [error, setError] = useState(null);
 
     function submit(e: { preventDefault: () => void; }) {
         e.preventDefault();
@@ -41,7 +24,6 @@ const Login: NextPage = () => {
             if (!!result.token) {
                 localStorage.setItem("token", result.token);
                 router.push("/dashboard");
-                //router.reload();
               return;
             } else {
                 setError(result.message);

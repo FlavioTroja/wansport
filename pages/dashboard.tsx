@@ -10,7 +10,7 @@ const Dashboard: NextPage = () => {
 
 
     useEffect(() => {
-        const fetchUser = async () => {
+        /*const fetchUser = async () => {
 
           const response = await fetch(`/api/auth/me`, {
             method: "GET",
@@ -28,7 +28,7 @@ const Dashboard: NextPage = () => {
           setUser(res.username);
         }
     
-        fetchUser();
+        fetchUser();*/
       });    
 
 

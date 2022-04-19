@@ -10,30 +10,29 @@ export interface LayoutProps  {
 const Layout = (props: LayoutProps) => {
 
     const [user, setUser] = useState();
-
+    
     useEffect(() => {
-
-      const token = localStorage.getItem('token') as string;
+        const token = localStorage.getItem('token') as string;
 
         const fetchUser = async () => {
 
           const response = await fetch(`/api/auth/me`, {
-            method: "GET",
             headers: {
               "Content-Type": "application/json",
               "Authorization": token
             },
           });
           
-          const user = await response.json();
-          setUser(!user?.message ? user : null);
 
+          const data = await response.json();
+          setUser(!data?.message ? data.name : null);
         }
     
         if (!!token) {
           fetchUser();
         }
-      }, []);    
+    }, [user]);
+
 
     return (
         <>
@@ -41,7 +40,7 @@ const Layout = (props: LayoutProps) => {
                 <title>My Blog | Page</title>
                 <meta name="description" content="Questa è la pagina del mio blog."/>
             </Head>
-            { !!user ? <Nav/> : '' }
+            { !!user ? <Nav user={user}/> : `` }
                 { props.children }
             <Footer/>
         </>
