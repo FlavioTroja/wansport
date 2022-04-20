@@ -21,11 +21,6 @@ model User {
   role Role @default(USER)
 }
 
-model Food {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-}
-
 enum Role {
   USER
   ADMIN
